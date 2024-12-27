@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class PhotocatalogApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(PhotocatalogApplication.class, args);
-	}
+  public static void main(String[] args) {
+    SpringApplication.run(PhotocatalogApplication.class, args);
+  }
 
 }

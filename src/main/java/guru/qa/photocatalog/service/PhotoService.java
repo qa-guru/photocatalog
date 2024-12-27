@@ -9,4 +9,6 @@ public interface PhotoService {
   List<Photo> allPhotos();
 
   Photo photoByDescription(String description);
+
+  Photo byId(String id);
 }
