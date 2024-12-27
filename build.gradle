@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.4.1'
 	id 'io.spring.dependency-management' version '1.1.7'
+	id 'com.google.cloud.tools.jib' version '3.4.1'
 }
 
 group = 'guru.qa'
@@ -26,6 +27,33 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
+
+jib {
+	container {
+		ports = ['8282']
+		creationTime = 'USE_CURRENT_TIMESTAMP'
+		labels = [
+				'maintainer': 'Dmitrii Tuchs @dtuchs',
+				'version'   : "${project.version}".toString()
+		]
+	}
+	from {
+		image = 'arm64v8/eclipse-temurin:21-jdk'
+		platforms {
+			platform {
+				architecture = 'arm64'
+				os = 'linux'
+			}
+		}
+	}
+	to {
+		image = "dtuchs/${project.name}"
+		tags = ['latest', "${project.version}"]
+	}
+}
+
+tasks.jib.dependsOn test
+tasks.jibDockerBuild.dependsOn test
 
 tasks.named('test') {
 	useJUnitPlatform()
