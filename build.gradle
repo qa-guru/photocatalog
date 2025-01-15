@@ -1,60 +1,63 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '3.4.1'
-	id 'io.spring.dependency-management' version '1.1.7'
-	id 'com.google.cloud.tools.jib' version '3.4.1'
+    id 'java'
+    id 'org.springframework.boot' version '3.4.1'
+    id 'io.spring.dependency-management' version '1.1.7'
+    id 'com.google.cloud.tools.jib' version '3.4.1'
 }
 
 group = 'guru.qa'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
-	}
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.flywaydb:flyway-core:10.17.1'
-	implementation 'org.flywaydb:flyway-database-postgresql:10.17.1'
-	runtimeOnly 'org.postgresql:postgresql:42.7.3'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.data:spring-data-commons'
+    implementation 'org.flywaydb:flyway-core:10.17.1'
+    implementation 'org.flywaydb:flyway-database-postgresql:10.17.1'
+    implementation 'org.springframework.boot:spring-boot-starter-graphql'
+    implementation 'com.tailrocks.graphql:graphql-datetime-spring-boot-starter:6.0.0'
+    runtimeOnly 'org.postgresql:postgresql:42.7.3'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 jib {
-	container {
-		ports = ['8282']
-		creationTime = 'USE_CURRENT_TIMESTAMP'
-		labels = [
-				'maintainer': 'Dmitrii Tuchs @dtuchs',
-				'version'   : "${project.version}".toString()
-		]
-	}
-	from {
-		image = 'arm64v8/eclipse-temurin:21-jdk'
-		platforms {
-			platform {
-				architecture = 'arm64'
-				os = 'linux'
-			}
-		}
-	}
-	to {
-		image = "dtuchs/${project.name}"
-		tags = ['latest', "${project.version}"]
-	}
+    container {
+        ports = ['8282']
+        creationTime = 'USE_CURRENT_TIMESTAMP'
+        labels = [
+                'maintainer': 'Dmitrii Tuchs @dtuchs',
+                'version'   : "${project.version}".toString()
+        ]
+    }
+    from {
+        image = 'arm64v8/eclipse-temurin:21-jdk'
+        platforms {
+            platform {
+                architecture = 'arm64'
+                os = 'linux'
+            }
+        }
+    }
+    to {
+        image = "dtuchs/${project.name}"
+        tags = ['latest', "${project.version}"]
+    }
 }
 
 tasks.jib.dependsOn test
 tasks.jibDockerBuild.dependsOn test
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
