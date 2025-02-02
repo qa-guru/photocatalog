@@ -8,6 +8,11 @@ spring:
   graphql:
     graphiql:
       enabled: true
+  kafka:
+    bootstrap-servers: 'localhost:9092'
+    consumer:
+      group-id: 'photocatalog-consumer'
+      auto-offset-reset: earliest
   datasource:
     url: 'jdbc:postgresql://localhost:5432/photocatalog'
     username: postgres
